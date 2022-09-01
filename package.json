@@ -1,0 +1,23 @@
+{
+  "bin": {
+    "pipeman": "src/index.ts"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "axios": "^0.27.2",
+    "commander": "^9.4.0",
+    "graphql": "^16.6.0",
+    "pino": "^8.4.2",
+    "pino-pretty": "^9.1.0"
+  },
+  "main": "src/main.js",
+  "name": "pipeman",
+  "private": true,
+  "scripts": {
+    "dev": "npx tsc && node dist/index.js clone"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "typescript": "^4.8.2"
+  }
+}
