@@ -1,25 +1,16 @@
-import { httpClient } from "../../infra/httpClient";
+import { gql } from "graphql-request";
+import { graphqlClient } from "../../infra/graphqlClient";
 
-type PhaseDeletionResponse = {
-  errors?: {
-    message: string;
-  }[];
-};
-
-export async function deletePhase(phaseId: string): Promise<void> {
-  const mutation = `
-    mutation {
-      deletePhase(input: { id: "${phaseId}" }) {
+export async function deletePhase(phaseId: number): Promise<void> {
+  const query = gql`
+    mutation ($phaseId: ID!) {
+      deletePhase(input: { id: $phaseId }) {
         success
       }
     }
   `;
 
-  const { data } = await httpClient.post<PhaseDeletionResponse>("/graphql", {
-    query: mutation,
+  await graphqlClient.request(query, {
+    phaseId,
   });
-
-  console.log(data);
-
-  if (data.errors) console.log(data.errors[0].message);
 }
