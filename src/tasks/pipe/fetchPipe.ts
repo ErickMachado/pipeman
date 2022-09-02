@@ -1,16 +1,15 @@
+import { gql } from "graphql-request";
 import { Pipe, PipeEntity } from "../../domain/models/pipe";
-import { httpClient } from "../../infra/httpClient";
+import { graphqlClient } from "../../infra/graphqlClient";
 
 type FetchPipeResponse = {
-  data: {
-    pipe: PipeEntity;
-  };
+  pipe: PipeEntity;
 };
 
 export async function fetchPipe(pipeId: number): Promise<Pipe> {
-  const query = `
-    query {
-      pipe(id: ${pipeId}) {
+  const query = gql`
+    query ($pipeId: ID!) {
+      pipe(id: $pipeId) {
         phases {
           fields {
             id
@@ -19,6 +18,10 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
             required
             type
           }
+          cards_can_be_moved_to_phases {
+            id
+          }
+          color
           id
           name
         }
@@ -28,9 +31,9 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
       }
     }
   `;
-  const { data } = await httpClient.post<FetchPipeResponse>("/graphql", {
-    query,
+  const { pipe } = await graphqlClient.request<FetchPipeResponse>(query, {
+    pipeId,
   });
 
-  return new Pipe(data.data.pipe);
+  return new Pipe(pipe);
 }

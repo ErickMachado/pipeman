@@ -12,6 +12,8 @@ export async function executeCloneCommand(productionPipeId: number) {
     const phaseId = await createPhase(phase.name, developmentPipe.id);
 
     for (const field of phase.fields) {
+      if (field.id.toLowerCase().startsWith("statement")) continue;
+
       await createField({
         connectedRepoId: developmentPipe.id,
         label: field.id,
