@@ -1,6 +1,6 @@
 import { program } from "commander";
-import { httpClient } from "../infra/httpClient";
-import { logger } from "../infra/logger";
+import { httpClient } from "../../infra/httpClient";
+import { logger } from "../../infra/logger";
 
 type ClonedPipeResponse = {
   data: { clonePipes: { pipes: { id: string }[] } };

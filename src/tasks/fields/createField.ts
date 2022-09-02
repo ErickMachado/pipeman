@@ -1,34 +1,57 @@
-import { program } from "commander";
-import { httpClient } from "../../infra/httpClient";
+import { gql } from "graphql-request";
+import { graphqlClient } from "../../infra/graphqlClient";
 
-type CreateFieldResponse = {
-  errors?: {
-    message: string;
-    locations: any;
-  }[];
+type Params = {
+  connectedRepoId: number;
+  label: string;
+  options: string[];
+  phaseId: number;
+  required: boolean;
+  type: string;
 };
 
-export async function createField(
-  label: string,
-  phaseId: string,
-  type: string
-) {
-  const mutation = `
-    mutation {
-      createPhaseField(input: { label: "${label}",  phase_id: ${phaseId},  type: "${type}"}) {
+export async function createField({
+  connectedRepoId,
+  label,
+  options,
+  phaseId,
+  required,
+  type,
+}: Params) {
+  const normalizedOptions = options.map((option) =>
+    option.replace(/[\\"]/g, "")
+  );
+
+  const query = gql`
+    mutation (
+      $label: String!
+      $phaseId: ID!
+      $type: ID!
+      $connectedRepoId: ID
+      $required: Boolean
+      $options: [String]
+    ) {
+      createPhaseField(
+        input: {
+          label: $label
+          phase_id: $phaseId
+          type: $type
+          connectedRepoId: $connectedRepoId
+          required: $required
+          options: $options
+        }
+      ) {
         clientMutationId
       }
-    }  
+    }
   `;
 
-  const { data } = await httpClient.post<CreateFieldResponse>("/graphql", {
-    query: mutation,
+  await graphqlClient.request(query, {
+    label,
+    phaseId,
+    type,
+    connectedRepoId,
+    required,
+    options: normalizedOptions,
   });
-
-  if (data.errors) {
-    console.log({
-      error: data.errors,
-      message: `Error creating the field ${label}`,
-    });
-  }
 }

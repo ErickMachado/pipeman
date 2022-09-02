@@ -1,4 +1,4 @@
-import { httpClient } from "../infra/httpClient";
+import { httpClient } from "../../infra/httpClient";
 
 type PhaseDeletionResponse = {
   errors?: {

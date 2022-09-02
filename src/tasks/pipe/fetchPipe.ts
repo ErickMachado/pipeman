@@ -1,5 +1,5 @@
-import { Pipe, PipeEntity } from "../domain/models/pipe";
-import { httpClient } from "../infra/httpClient";
+import { Pipe, PipeEntity } from "../../domain/models/pipe";
+import { httpClient } from "../../infra/httpClient";
 
 type FetchPipeResponse = {
   data: {
@@ -7,7 +7,7 @@ type FetchPipeResponse = {
   };
 };
 
-export async function fetchPipe(pipeId: string): Promise<Pipe> {
+export async function fetchPipe(pipeId: number): Promise<Pipe> {
   const query = `
     query {
       pipe(id: ${pipeId}) {
@@ -15,11 +15,14 @@ export async function fetchPipe(pipeId: string): Promise<Pipe> {
           fields {
             id
             label
+            options
+            required
             type
           }
           id
           name
         }
+        name
         id
         uuid
       }

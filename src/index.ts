@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { Command } from "commander";
-import { executeCloneCommand } from "./useCases/fetchProductionFieldIds";
+import { executeCloneCommand } from "./useCases/clonePipe";
 
 const program = new Command();
 
