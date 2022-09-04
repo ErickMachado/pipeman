@@ -1,6 +1,7 @@
 import { Phase } from "./phase";
 
 export type InitialFormField = {
+  description: string;
   id: string;
   options: string[];
   required: boolean;
@@ -12,6 +13,7 @@ export type PipeEntity = {
   name: string;
   phases: Phase[];
   start_form_fields: InitialFormField[];
+  startFormPhaseId: number;
   uuid: string;
 };
 
@@ -20,6 +22,7 @@ export class Pipe {
   public id: number;
   public name: string;
   public phases: Phase[];
+  public startFormPhaseId: number;
   public uuid: string;
 
   constructor(pipe: PipeEntity) {
@@ -27,6 +30,7 @@ export class Pipe {
     this.id = pipe.id;
     this.name = pipe.name;
     this.phases = pipe.phases;
+    this.startFormPhaseId = pipe.startFormPhaseId;
     this.uuid = pipe.uuid;
   }
 }

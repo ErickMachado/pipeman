@@ -1,7 +1,6 @@
-import { createPhase, deletePhase } from "../tasks/phase";
-import { createField } from "../tasks/fields";
-import { createPipe, fetchPipe } from "../tasks/pipe";
+import { clonePipe, fetchPipe } from "../tasks/pipe";
 import chalk from "chalk";
+import { createField, deleteField } from "../tasks/fields";
 
 export async function executeCloneCommand(productionPipeId: number) {
   console.log(chalk.yellow("› Fetching production pipe"));
@@ -9,41 +8,65 @@ export async function executeCloneCommand(productionPipeId: number) {
 
   console.log(chalk.yellow("› Creating development pipe"));
 
-  const currentDate = new Date().toISOString().split("T")[0];
-  const pipeName = `${productionPipe.name} - ${currentDate}`;
-  const developmentPipe = await createPipe(
-    pipeName,
-    "153855",
-    productionPipe.initialFormFields
-  );
-  const defaultPhases = developmentPipe.phases;
+  const developmentPipeId = await clonePipe([productionPipe.id]);
 
-  console.log(chalk.yellow(`› Cloning phases and fields from production pipe`));
-  for (const phase of productionPipe.phases) {
-    const phaseId = await createPhase(phase.name, developmentPipe.id);
+  setTimeout(async () => {
+    const developmentPipe = await fetchPipe(developmentPipeId);
 
-    for (const field of phase.fields) {
-      if (field.id.toLowerCase().startsWith("statement")) continue;
+    // * Delete all fields from all phases
+    for (const phase of developmentPipe.phases) {
+      for (const field of phase.fields) {
+        await deleteField(developmentPipe.uuid, field.id);
+      }
+    }
 
+    // * Delete all start form fields
+    for (const field of developmentPipe.initialFormFields) {
+      await deleteField(developmentPipe.uuid, field.id);
+    }
+
+    // * Recreate initial form fields
+    for (const field of productionPipe.initialFormFields) {
       await createField({
-        connectedRepoId: developmentPipe.id,
+        connectedRepoId: 302607451,
+        description: field.description,
         label: field.id,
         options: field.options,
-        phaseId,
+        phaseId: developmentPipe.startFormPhaseId,
         required: field.required,
         type: field.type,
       });
     }
-  }
 
-  console.log(chalk.yellow("› Cleaning house"));
-  for (const phase of defaultPhases) {
-    await deletePhase(phase.id);
-  }
+    const findPhaseByName = (phaseName: string) => {
+      const phase = developmentPipe.phases.find(
+        (phase) => phase.name === phaseName
+      );
 
-  console.log(
-    chalk.green(
-      `✓ Development pipe was successfully create. You can access on: https://app.pipefy.com/pipes/${developmentPipe.id}`
-    )
-  );
+      return phase;
+    };
+
+    // * Recreate fields by phases
+    for (const phase of productionPipe.phases) {
+      for (const field of phase.fields) {
+        const developmentPhase = findPhaseByName(phase.name)!;
+
+        await createField({
+          connectedRepoId: developmentPipe.id,
+          description: field.description,
+          label: field.id,
+          options: field.options,
+          phaseId: developmentPhase.id,
+          required: field.required,
+          type: field.type,
+        });
+      }
+    }
+
+    console.log(
+      chalk.green(
+        `✓ Development pipe was successfully create. You can access on: https://app.pipefy.com/pipes/${developmentPipe.id}`
+      )
+    );
+  }, 40000);
 }

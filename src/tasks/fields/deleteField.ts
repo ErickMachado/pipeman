@@ -1,13 +1,17 @@
-import { httpClient } from "../../infra/httpClient";
+import { gql } from "graphql-request";
+import { graphqlClient } from "../../infra/graphqlClient";
 
 export async function deleteField(pipeUUID: string, fieldId: string) {
-  const mutation = `
-    mutation {
-      deletePhaseField(input: { id: "${fieldId}", pipeUuid: "${pipeUUID}" }) {
+  const query = gql`
+    mutation ($fieldId: ID!, $pipeUUID: ID!) {
+      deletePhaseField(input: { id: $fieldId, pipeUuid: $pipeUUID }) {
         success
       }
     }
   `;
 
-  await httpClient.post("/graphql", { query: mutation });
+  await graphqlClient.request(query, {
+    fieldId,
+    pipeUUID,
+  });
 }

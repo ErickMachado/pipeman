@@ -14,6 +14,7 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
       pipe(id: $pipeId) {
         phases {
           fields {
+            description
             id
             label
             options
@@ -28,11 +29,13 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
           name
         }
         start_form_fields {
+          description
           options
           required
           id
           type
         }
+        startFormPhaseId
         name
         id
         uuid

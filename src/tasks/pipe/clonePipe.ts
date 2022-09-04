@@ -1,35 +1,27 @@
-import { program } from "commander";
-import { httpClient } from "../../infra/httpClient";
-import { logger } from "../../infra/logger";
+import { gql } from "graphql-request";
+import { Pipe, PipeEntity } from "../../domain/models/pipe";
+import { graphqlClient } from "../../infra/graphqlClient";
 
-type ClonedPipeResponse = {
-  data: { clonePipes: { pipes: { id: string }[] } };
-  errors?: {
-    message: string;
-  }[];
+type ClonePipeResponse = {
+  clonePipes: {
+    pipes: PipeEntity[];
+  };
 };
 
-export async function clonePipe(pipeId: string): Promise<string> {
-  logger.info(`👷 Cloning pipe with ID ${pipeId}`);
-
-  const mutation = `
-    mutation {
-      clonePipes(input: { pipe_template_ids: ${pipeId} }) {
+export async function clonePipe(pipeIds: number[]): Promise<number> {
+  const query = gql`
+    mutation ($pipeId: [ID]!) {
+      clonePipes(input: { pipe_template_ids: $pipeId }) {
         pipes {
           id
         }
       }
     }
   `;
-  const { data } = await httpClient.post<ClonedPipeResponse>("/graphql", {
-    query: mutation,
+
+  const { clonePipes } = await graphqlClient.request<ClonePipeResponse>(query, {
+    pipeId: pipeIds,
   });
 
-  if (data.errors) {
-    logger.error(`❌ Failed to clone pipe. ${data.errors[0].message}`);
-
-    program.error(data.errors[0].message);
-  }
-
-  return data.data.clonePipes.pipes[0].id;
+  return clonePipes.pipes[0].id;
 }

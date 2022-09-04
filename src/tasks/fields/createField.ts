@@ -3,6 +3,7 @@ import { graphqlClient } from "../../infra/graphqlClient";
 
 type Params = {
   connectedRepoId: number;
+  description: string;
   label: string;
   options: string[];
   phaseId: number;
@@ -12,6 +13,7 @@ type Params = {
 
 export async function createField({
   connectedRepoId,
+  description,
   label,
   options,
   phaseId,
@@ -30,6 +32,7 @@ export async function createField({
       $connectedRepoId: ID
       $required: Boolean
       $options: [String]
+      $description: String
     ) {
       createPhaseField(
         input: {
@@ -39,6 +42,7 @@ export async function createField({
           connectedRepoId: $connectedRepoId
           required: $required
           options: $options
+          description: $description
         }
       ) {
         clientMutationId
@@ -48,6 +52,7 @@ export async function createField({
 
   await graphqlClient.request(query, {
     label,
+    description,
     phaseId,
     type,
     connectedRepoId,
