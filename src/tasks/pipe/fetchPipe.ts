@@ -1,3 +1,5 @@
+import chalk from "chalk";
+import { program } from "commander";
 import { gql } from "graphql-request";
 import { Pipe, PipeEntity } from "../../domain/models/pipe";
 import { graphqlClient } from "../../infra/graphqlClient";
@@ -25,6 +27,12 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
           id
           name
         }
+        start_form_fields {
+          options
+          required
+          id
+          type
+        }
         name
         id
         uuid
@@ -34,6 +42,12 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
   const { pipe } = await graphqlClient.request<FetchPipeResponse>(query, {
     pipeId,
   });
+
+  if (!pipe) {
+    console.log(chalk.red(`✕ Pipe with ID ${pipeId} does not exists`));
+
+    program.error("");
+  }
 
   return new Pipe(pipe);
 }

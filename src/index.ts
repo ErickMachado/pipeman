@@ -12,8 +12,8 @@ program
 
 program
   .command("clone")
-  .description("Create a fully identical version of production pipe")
-  .argument("pipeId", "The production pipe ID")
+  .description("Clone a Pipefy's clone")
+  .argument("pipeId", "The ID of the pipe that will be cloned")
   .action(executeCloneCommand);
 
 program.parse();

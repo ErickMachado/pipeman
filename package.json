@@ -1,10 +1,14 @@
 {
   "bin": {
-    "pipeman": "src/index.ts"
+    "pipeman": "dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.2"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "axios": "^0.27.2",
+    "chalk": "4.1.2",
     "commander": "^9.4.0",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
@@ -15,10 +19,8 @@
   "name": "pipeman",
   "private": true,
   "scripts": {
+    "build": "tsc",
     "dev": "npx tsc && node dist/index.js clone"
   },
-  "version": "0.1.0",
-  "devDependencies": {
-    "typescript": "^4.8.2"
-  }
+  "version": "0.1.0"
 }
