@@ -14,6 +14,7 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
       pipe(id: $pipeId) {
         phases {
           fields {
+            canConnectExisting
             description
             id
             label

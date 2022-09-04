@@ -1,6 +1,7 @@
 import { Phase } from "./phase";
 
 export type InitialFormField = {
+  canConnectExisting: boolean;
   description: string;
   id: string;
   options: string[];

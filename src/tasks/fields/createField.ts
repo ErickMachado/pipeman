@@ -2,7 +2,8 @@ import { gql } from "graphql-request";
 import { graphqlClient } from "../../infra/graphqlClient";
 
 type Params = {
-  connectedRepoId: number;
+  connectedRepoId: string;
+  canConnectExisting: boolean;
   description: string;
   label: string;
   options: string[];
@@ -13,6 +14,7 @@ type Params = {
 
 export async function createField({
   connectedRepoId,
+  canConnectExisting,
   description,
   label,
   options,
@@ -33,6 +35,7 @@ export async function createField({
       $required: Boolean
       $options: [String]
       $description: String
+      $canConnectExisting: Boolean
     ) {
       createPhaseField(
         input: {
@@ -43,6 +46,7 @@ export async function createField({
           required: $required
           options: $options
           description: $description
+          canConnectExisting: $canConnectExisting
         }
       ) {
         clientMutationId
@@ -52,6 +56,7 @@ export async function createField({
 
   await graphqlClient.request(query, {
     label,
+    canConnectExisting,
     description,
     phaseId,
     type,

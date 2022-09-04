@@ -28,7 +28,8 @@ export async function executeCloneCommand(productionPipeId: number) {
     // * Recreate initial form fields
     for (const field of productionPipe.initialFormFields) {
       await createField({
-        connectedRepoId: 302607451,
+        connectedRepoId: "nGxocpj9",
+        canConnectExisting: field.canConnectExisting,
         description: field.description,
         label: field.id,
         options: field.options,
@@ -52,7 +53,8 @@ export async function executeCloneCommand(productionPipeId: number) {
         const developmentPhase = findPhaseByName(phase.name)!;
 
         await createField({
-          connectedRepoId: developmentPipe.id,
+          connectedRepoId: "nGxocpj9",
+          canConnectExisting: field.canConnectExisting,
           description: field.description,
           label: field.id,
           options: field.options,
