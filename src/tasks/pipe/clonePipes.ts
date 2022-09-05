@@ -8,7 +8,7 @@ type ClonePipeResponse = {
   };
 };
 
-export async function clonePipe(pipeIds: number[]): Promise<number> {
+export async function clonePipes(pipeIds: number[]): Promise<number> {
   const query = gql`
     mutation ($pipeId: [ID]!) {
       clonePipes(input: { pipe_template_ids: $pipeId }) {

@@ -1,14 +1,16 @@
-import { clonePipe, fetchPipe } from "../tasks/pipe";
+import { clonePipes, fetchPipe } from "../tasks/pipe";
 import chalk from "chalk";
 import { createField, deleteField } from "../tasks/fields";
 
+const TEST_DATABASE_ID = "nGxocpj9";
+
 export async function executeCloneCommand(productionPipeId: number) {
-  console.log(chalk.yellow("› Fetching production pipe"));
+  console.log(chalk.yellow("› Fetching production pipe 🔍"));
   const productionPipe = await fetchPipe(productionPipeId);
 
-  console.log(chalk.yellow("› Creating development pipe"));
+  console.log(chalk.yellow("› Creating development pipe 🛠️"));
 
-  const developmentPipeId = await clonePipe([productionPipe.id]);
+  const developmentPipeId = await clonePipes([productionPipe.id]);
 
   setTimeout(async () => {
     const developmentPipe = await fetchPipe(developmentPipeId);
@@ -28,7 +30,7 @@ export async function executeCloneCommand(productionPipeId: number) {
     // * Recreate initial form fields
     for (const field of productionPipe.initialFormFields) {
       await createField({
-        connectedRepoId: "nGxocpj9",
+        connectedRepoId: TEST_DATABASE_ID,
         canConnectExisting: field.canConnectExisting,
         description: field.description,
         label: field.id,
@@ -53,7 +55,7 @@ export async function executeCloneCommand(productionPipeId: number) {
         const developmentPhase = findPhaseByName(phase.name)!;
 
         await createField({
-          connectedRepoId: "nGxocpj9",
+          connectedRepoId: TEST_DATABASE_ID,
           canConnectExisting: field.canConnectExisting,
           description: field.description,
           label: field.id,
@@ -67,7 +69,7 @@ export async function executeCloneCommand(productionPipeId: number) {
 
     console.log(
       chalk.green(
-        `✓ Development pipe was successfully create. You can access on: https://app.pipefy.com/pipes/${developmentPipe.id}`
+        `✓ Development pipe successfully created. You can access it on: https://app.pipefy.com/pipes/${developmentPipe.id}`
       )
     );
   }, 40000);

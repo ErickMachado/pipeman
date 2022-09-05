@@ -1,3 +1,3 @@
 export { createPipe } from "./createPipe";
-export { clonePipe } from "./clonePipe";
+export { clonePipes } from "./clonePipes";
 export { fetchPipe } from "./fetchPipe";
