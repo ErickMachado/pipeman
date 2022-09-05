@@ -1,12 +1,12 @@
-import chalk from "chalk";
-import { program } from "commander";
-import { gql } from "graphql-request";
-import { Pipe, PipeEntity } from "../../domain/models/pipe";
-import { graphqlClient } from "../../infra/graphqlClient";
+import chalk from 'chalk'
+import { program } from 'commander'
+import { gql } from 'graphql-request'
+import { Pipe, PipeEntity } from '../../domain/models/pipe'
+import { graphqlClient } from '../../infra/graphqlClient'
 
 type FetchPipeResponse = {
-  pipe: PipeEntity;
-};
+  pipe: PipeEntity
+}
 
 export async function fetchPipe(pipeId: number): Promise<Pipe> {
   const query = gql`
@@ -42,16 +42,16 @@ export async function fetchPipe(pipeId: number): Promise<Pipe> {
         uuid
       }
     }
-  `;
+  `
   const { pipe } = await graphqlClient.request<FetchPipeResponse>(query, {
-    pipeId,
-  });
+    pipeId
+  })
 
   if (!pipe) {
-    console.log(chalk.red(`✕ Pipe with ID ${pipeId} does not exists`));
+    console.log(chalk.red(`✕ Pipe with ID ${pipeId} does not exists`))
 
-    program.error("");
+    program.error('')
   }
 
-  return new Pipe(pipe);
+  return new Pipe(pipe)
 }

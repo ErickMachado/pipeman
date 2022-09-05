@@ -1,16 +1,16 @@
-import { gql } from "graphql-request";
-import { graphqlClient } from "../../infra/graphqlClient";
+import { gql } from 'graphql-request'
+import { graphqlClient } from '../../infra/graphqlClient'
 
 type Params = {
-  connectedRepoId: string;
-  canConnectExisting: boolean;
-  description: string;
-  label: string;
-  options: string[];
-  phaseId: number;
-  required: boolean;
-  type: string;
-};
+  connectedRepoId: string
+  canConnectExisting: boolean
+  description: string
+  label: string
+  options: string[]
+  phaseId: number
+  required: boolean
+  type: string
+}
 
 export async function createField({
   connectedRepoId,
@@ -20,11 +20,11 @@ export async function createField({
   options,
   phaseId,
   required,
-  type,
+  type
 }: Params) {
   const normalizedOptions = options.map((option) =>
-    option.replace(/[\\"]/g, "")
-  );
+    option.replace(/[\\"]/g, '')
+  )
 
   const query = gql`
     mutation (
@@ -52,7 +52,7 @@ export async function createField({
         clientMutationId
       }
     }
-  `;
+  `
 
   await graphqlClient.request(query, {
     label,
@@ -62,6 +62,6 @@ export async function createField({
     type,
     connectedRepoId,
     required,
-    options: normalizedOptions,
-  });
+    options: normalizedOptions
+  })
 }

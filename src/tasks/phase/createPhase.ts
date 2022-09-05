@@ -1,13 +1,13 @@
-import { gql } from "graphql-request";
-import { graphqlClient } from "../../infra/graphqlClient";
+import { gql } from 'graphql-request'
+import { graphqlClient } from '../../infra/graphqlClient'
 
 type CreatePhaseResponse = {
   createPhase: {
     phase: {
-      id: number;
-    };
-  };
-};
+      id: number
+    }
+  }
+}
 
 export async function createPhase(
   name: string,
@@ -21,12 +21,12 @@ export async function createPhase(
         }
       }
     }
-  `;
+  `
 
   const { createPhase } = await graphqlClient.request<CreatePhaseResponse>(
     query,
     { name, pipeId }
-  );
+  )
 
-  return createPhase.phase.id;
+  return createPhase.phase.id
 }

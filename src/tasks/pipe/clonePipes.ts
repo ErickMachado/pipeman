@@ -1,12 +1,12 @@
-import { gql } from "graphql-request";
-import { Pipe, PipeEntity } from "../../domain/models/pipe";
-import { graphqlClient } from "../../infra/graphqlClient";
+import { gql } from 'graphql-request'
+import { PipeEntity } from '../../domain/models/pipe'
+import { graphqlClient } from '../../infra/graphqlClient'
 
 type ClonePipeResponse = {
   clonePipes: {
-    pipes: PipeEntity[];
-  };
-};
+    pipes: PipeEntity[]
+  }
+}
 
 export async function clonePipes(pipeIds: number[]): Promise<number> {
   const query = gql`
@@ -17,11 +17,11 @@ export async function clonePipes(pipeIds: number[]): Promise<number> {
         }
       }
     }
-  `;
+  `
 
   const { clonePipes } = await graphqlClient.request<ClonePipeResponse>(query, {
-    pipeId: pipeIds,
-  });
+    pipeId: pipeIds
+  })
 
-  return clonePipes.pipes[0].id;
+  return clonePipes.pipes[0].id
 }

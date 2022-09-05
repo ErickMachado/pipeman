@@ -1,5 +1,5 @@
-import { gql } from "graphql-request";
-import { graphqlClient } from "../../infra/graphqlClient";
+import { gql } from 'graphql-request'
+import { graphqlClient } from '../../infra/graphqlClient'
 
 export async function deleteField(pipeUUID: string, fieldId: string) {
   const query = gql`
@@ -8,10 +8,10 @@ export async function deleteField(pipeUUID: string, fieldId: string) {
         success
       }
     }
-  `;
+  `
 
   await graphqlClient.request(query, {
     fieldId,
-    pipeUUID,
-  });
+    pipeUUID
+  })
 }
