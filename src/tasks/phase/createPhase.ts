@@ -1,12 +1,21 @@
-import { httpClient } from "../../infra/httpClient";
+import { gql } from "graphql-request";
+import { graphqlClient } from "../../infra/graphqlClient";
+
+type CreatePhaseResponse = {
+  createPhase: {
+    phase: {
+      id: number;
+    };
+  };
+};
 
 export async function createPhase(
   name: string,
   pipeId: number
 ): Promise<number> {
-  const query = `
-    mutation {
-      createPhase(input: { name: "${name}", pipe_id: "${pipeId}" }) {
+  const query = gql`
+    mutation ($name: String!, $pipeId: ID!) {
+      createPhase(input: { name: $name, pipe_id: $pipeId }) {
         phase {
           id
         }
@@ -14,7 +23,10 @@ export async function createPhase(
     }
   `;
 
-  const { data } = await httpClient.post("/graphql", { query });
+  const { createPhase } = await graphqlClient.request<CreatePhaseResponse>(
+    query,
+    { name, pipeId }
+  );
 
-  return data.data.createPhase.phase.id;
+  return createPhase.phase.id;
 }
