@@ -2,10 +2,12 @@ import { clonePipes, fetchPipe } from '../tasks/pipe'
 import chalk from 'chalk'
 import { createField, deleteField } from '../tasks/fields'
 
-const TEST_DATABASE_ID = 'nGxocpj9'
 const TIME_TO_PREPARE_PIPE_IN_MILLISECONDS = 40000
 
-export async function executeCloneCommand(productionPipeId: number) {
+export async function executeCloneCommand(
+  productionPipeId: number,
+  options: any
+) {
   console.log(chalk.yellow('› Fetching pipe 🔍'))
   const productionPipe = await fetchPipe(productionPipeId)
 
@@ -32,7 +34,7 @@ export async function executeCloneCommand(productionPipeId: number) {
     // * Recreate initial form fields
     for (const field of productionPipe.initialFormFields) {
       await createField({
-        connectedRepoId: TEST_DATABASE_ID,
+        connectedRepoId: options.repoid,
         canConnectExisting: field.canConnectExisting,
         description: field.description,
         label: field.id,
@@ -57,7 +59,7 @@ export async function executeCloneCommand(productionPipeId: number) {
         const developmentPhase = findPhaseByName(phase.name)!
 
         await createField({
-          connectedRepoId: TEST_DATABASE_ID,
+          connectedRepoId: options.repoid,
           canConnectExisting: field.canConnectExisting,
           description: field.description,
           label: field.id,

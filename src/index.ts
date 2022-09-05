@@ -14,6 +14,7 @@ program
   .command('clone')
   .description("Create a fully identical version of a Pipefy's pipe")
   .argument('pipeId', 'The ID of the pipe that will be cloned')
+  .option('--repoid <value>', 'A repository ID for connection fields')
   .action(executeCloneCommand)
 
-program.parse()
+program.parse(process.argv)
