@@ -1,25 +1,17 @@
+import { Field } from "./field";
 import { Phase } from "./phase";
-
-export type InitialFormField = {
-  canConnectExisting: boolean;
-  description: string;
-  id: string;
-  options: string[];
-  required: boolean;
-  type: string;
-};
 
 export type PipeEntity = {
   id: number;
   name: string;
   phases: Phase[];
-  start_form_fields: InitialFormField[];
+  start_form_fields: Field[];
   startFormPhaseId: number;
   uuid: string;
 };
 
 export class Pipe {
-  public initialFormFields: InitialFormField[];
+  public initialFormFields: Field[];
   public id: number;
   public name: string;
   public phases: Phase[];

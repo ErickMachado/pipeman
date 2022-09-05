@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
-import { InitialFormField, Pipe, PipeEntity } from "../../domain/models/pipe";
+import { Field } from "../../domain/models/field";
+import { Pipe, PipeEntity } from "../../domain/models/pipe";
 import { graphqlClient } from "../../infra/graphqlClient";
-import { httpClient } from "../../infra/httpClient";
 
 type CreatePipeResponse = {
   createPipe: {
@@ -12,7 +12,7 @@ type CreatePipeResponse = {
 export async function createPipe(
   name: string,
   organizationId: string,
-  initialFormFields: InitialFormField[]
+  initialFormFields: Field[]
 ) {
   const formFields = initialFormFields.map((field) => ({
     label: field.id,
