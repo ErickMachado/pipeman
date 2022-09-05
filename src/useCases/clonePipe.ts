@@ -3,15 +3,17 @@ import chalk from "chalk";
 import { createField, deleteField } from "../tasks/fields";
 
 const TEST_DATABASE_ID = "nGxocpj9";
+const TIME_TO_PREPARE_PIPE_IN_MILLISECONDS = 40000;
 
 export async function executeCloneCommand(productionPipeId: number) {
-  console.log(chalk.yellow("› Fetching production pipe 🔍"));
+  console.log(chalk.yellow("› Fetching pipe 🔍"));
   const productionPipe = await fetchPipe(productionPipeId);
 
-  console.log(chalk.yellow("› Creating development pipe 🛠️"));
+  console.log(chalk.yellow(`› Cloning pipe "${productionPipe.name}" 🛠️`));
 
   const developmentPipeId = await clonePipes([productionPipe.id]);
 
+  // ! This timeout is necessary because the cloned pipe is not immediately ready for use
   setTimeout(async () => {
     const developmentPipe = await fetchPipe(developmentPipeId);
 
@@ -69,8 +71,8 @@ export async function executeCloneCommand(productionPipeId: number) {
 
     console.log(
       chalk.green(
-        `✓ Development pipe successfully created. You can access it on: https://app.pipefy.com/pipes/${developmentPipe.id}`
+        `✓ Pipe "${productionPipe.name}" successfully cloned. You can access the copy on: https://app.pipefy.com/pipes/${developmentPipe.id}`
       )
     );
-  }, 40000);
+  }, TIME_TO_PREPARE_PIPE_IN_MILLISECONDS);
 }
